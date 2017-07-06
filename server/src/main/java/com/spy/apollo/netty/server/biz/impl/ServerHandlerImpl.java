@@ -65,6 +65,7 @@ public class ServerHandlerImpl implements ServerHandler {
     @Override
     public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
         log.info("channel read complete");
+        ctx.flush();
         ctx.writeAndFlush(Unpooled.EMPTY_BUFFER);//4
         //.addListener(ChannelFutureListener.CLOSE);
     }
