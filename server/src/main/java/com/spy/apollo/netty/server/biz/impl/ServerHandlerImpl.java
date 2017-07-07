@@ -7,6 +7,7 @@ import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.timeout.IdleStateEvent;
 import io.netty.util.CharsetUtil;
+import io.netty.util.ReferenceCountUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -60,13 +61,18 @@ public class ServerHandlerImpl implements ServerHandler {
 
         ByteBuf in = (ByteBuf) msg;
         log.debug("Server received: {}", in.toString(CharsetUtil.UTF_8));
+
+        //to something
+
+        // relase bytebuf
+        ReferenceCountUtil.release(in);
     }
 
     @Override
     public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
         log.info("channel read complete");
         ctx.flush();
-        ctx.writeAndFlush(Unpooled.EMPTY_BUFFER);//4
+        //ctx.writeAndFlush(Unpooled.EMPTY_BUFFER);//4
         //.addListener(ChannelFutureListener.CLOSE);
     }
 
