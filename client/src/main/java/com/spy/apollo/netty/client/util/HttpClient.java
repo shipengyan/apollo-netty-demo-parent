@@ -1,7 +1,10 @@
 package com.spy.apollo.netty.client.util;
 
 import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.*;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelPromise;
+import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
@@ -40,8 +43,8 @@ public class HttpClient {
          .channel(NioSocketChannel.class)
 //         .option(ChannelOption.SO_RCVBUF, new FixedRecvByteBufAllocator(10240)) // 修改无效
 //         .option(ChannelOption.RCVBUF_ALLOCATOR, new FixedRecvByteBufAllocator(10240))
-         //控制接收包大小
-         .option(ChannelOption.RCVBUF_ALLOCATOR, new AdaptiveRecvByteBufAllocator(100, 2000, 20480))
+         //控制接收包大小，默认1024
+//         .option(ChannelOption.RCVBUF_ALLOCATOR, new AdaptiveRecvByteBufAllocator(100, 2000, 20480))
          .handler(new ChannelInitializer<SocketChannel>() {
              @Override
              protected void initChannel(SocketChannel ch) throws Exception {
