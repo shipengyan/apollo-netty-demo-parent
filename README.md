@@ -9,9 +9,9 @@
 
 ### Server
 
-- `run com.spy.apollo.netty.server.ServerApplication`
+- `run com.spy.apollo.netty.spring.ServerApplication`
 
 ### Client
 
-- `run com.spy.apollo.netty.client.ClientApplication`
+- `run com.spy.apollo.netty.spring.ClientApplication`
 

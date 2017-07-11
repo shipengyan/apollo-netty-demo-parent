@@ -16,9 +16,8 @@
     <version>1.0-SNAPSHOT</version>
 
     <modules>
-        <module>server</module>
-        <module>client</module>
-        <module>core</module>
+        <module>demo</module>
+        <module>spring-netty</module>
     </modules>
 
     <properties>
@@ -30,16 +29,14 @@
     <dependencyManagement>
 
         <dependencies>
+
+
             <dependency>
-                <groupId>com.spy.apollo</groupId>
-                <artifactId>config</artifactId>
-                <version>${apollo.project.version}</version>
+                <groupId>com.github.shipengyan</groupId>
+                <artifactId>spy-framework</artifactId>
+                <version>0.0.3</version>
             </dependency>
-            <dependency>
-                <groupId>com.spy.apollo</groupId>
-                <artifactId>core</artifactId>
-                <version>${apollo.project.version}</version>
-            </dependency>
+
         </dependencies>
     </dependencyManagement>
 </project>
