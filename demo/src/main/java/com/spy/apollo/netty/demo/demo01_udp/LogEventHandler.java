@@ -1,4 +1,4 @@
-package com.spy.apollo.netty.demo.udp;
+package com.spy.apollo.netty.demo.demo01_udp;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;

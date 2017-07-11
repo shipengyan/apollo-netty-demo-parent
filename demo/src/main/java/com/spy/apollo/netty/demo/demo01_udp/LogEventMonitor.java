@@ -1,6 +1,6 @@
-package com.spy.apollo.netty.demo.udp;
+package com.spy.apollo.netty.demo.demo01_udp;
 
-import com.spy.apollo.netty.demo.udp.protocol.LogEventDecoder;
+import com.spy.apollo.netty.demo.demo01_udp.protocol.LogEventDecoder;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;
