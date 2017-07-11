@@ -8,8 +8,10 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelPromise;
 import io.netty.handler.timeout.IdleStateEvent;
 import io.netty.util.CharsetUtil;
+import io.netty.util.ReferenceCountUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -35,6 +37,10 @@ public class ClientHandlerImpl implements ClientHandler {
 
     private JSONObject heartJson;
 
+    private ChannelPromise promise;
+    private JSONObject     data;
+
+
     @PostConstruct
     public void after() {
         heartJson = new JSONObject();
@@ -56,7 +62,7 @@ public class ClientHandlerImpl implements ClientHandler {
     public void channelActive(ChannelHandlerContext ctx) {
         log.debug("channel active");
         this.ctx = ctx;
-        ctx.writeAndFlush(Unpooled.copiedBuffer("Netty rocks!", CharsetUtil.UTF_8));//2
+//        ctx.writeAndFlush(Unpooled.copiedBuffer("Netty rocks!", CharsetUtil.UTF_8));//2
     }
 
     @Override
@@ -70,7 +76,18 @@ public class ClientHandlerImpl implements ClientHandler {
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         ByteBuf in = (ByteBuf) msg;
 
-        log.debug("Client received: {}", in.toString(CharsetUtil.UTF_8));    //3
+        String readStr = in.toString(CharsetUtil.UTF_8);
+
+        log.debug("Client received: {}", readStr);
+
+        data = JSON.parseObject(readStr);
+        if (promise != null) {
+            promise.setSuccess();
+            promise = null;
+        }
+
+        // relase bytebuf
+        ReferenceCountUtil.release(in);
     }
 
     @Override
@@ -130,7 +147,35 @@ public class ClientHandlerImpl implements ClientHandler {
     public void sendMsg(Object obj) {
         if (ctx != null && ctx.channel() != null && ctx.channel().isActive()) {
             log.info("client send msg.");
-            ctx.writeAndFlush(JSON.toJSONString(obj).getBytes());
+            ByteBuf byteBuf = Unpooled.buffer().writeBytes(JSON.toJSONString(obj).getBytes());
+
+            ctx.writeAndFlush(byteBuf);
         }
+    }
+
+    @Override
+    public JSONObject sendMsgSync(Object obj) {
+        if (ctx != null && ctx.channel() != null && ctx.channel().isActive()) {
+            log.info("client send msg.");
+
+            ByteBuf byteBuf = Unpooled.buffer().writeBytes(JSON.toJSONString(obj).getBytes());
+
+            promise = ctx.writeAndFlush(byteBuf).channel().newPromise();
+
+            try {
+                promise.await();
+
+                log.info("send msg receive data: {}", data);
+
+                return data;
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } finally {
+                //ReferenceCountUtil.release(byteBuf);
+            }
+
+        }
+
+        return null;
     }
 }

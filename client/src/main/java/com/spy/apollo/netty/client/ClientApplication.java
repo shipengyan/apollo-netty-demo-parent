@@ -3,6 +3,7 @@ package com.spy.apollo.netty.client;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 import java.io.IOException;
 
@@ -14,6 +15,7 @@ import java.io.IOException;
  * @since 1.0
  */
 @Slf4j
+@EnableScheduling
 @SpringBootApplication
 public class ClientApplication {
 

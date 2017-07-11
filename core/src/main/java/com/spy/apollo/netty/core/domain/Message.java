@@ -17,6 +17,8 @@ import java.io.Serializable;
 public class Message implements Serializable {
 
     private String key;
+    private String version = "1.0.0";
     private String action;
     private String param;
+    private Long sendTime = System.currentTimeMillis();
 }

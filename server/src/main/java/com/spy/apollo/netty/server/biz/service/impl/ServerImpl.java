@@ -1,7 +1,7 @@
-package com.spy.apollo.netty.server.biz.impl;
+package com.spy.apollo.netty.server.biz.service.impl;
 
-import com.spy.apollo.netty.server.biz.Server;
-import com.spy.apollo.netty.server.biz.ServerHandler;
+import com.spy.apollo.netty.server.biz.service.Server;
+import com.spy.apollo.netty.server.biz.service.ServerHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -10,7 +10,6 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import io.netty.handler.timeout.IdleStateHandler;
@@ -38,7 +37,7 @@ public class ServerImpl implements Server {
     @Autowired
     private ServerHandler serverHandler;
     @Value("${apollo.server.port}")
-    private Integer port;
+    private Integer       port;
     private Long readerIdleTime = 10L;
     private Long writerIdleTime = 10L;
     private Long allIdleTime    = 20L;
@@ -53,8 +52,8 @@ public class ServerImpl implements Server {
         workerGroup = new NioEventLoopGroup(Runtime.getRuntime().availableProcessors() - 1);
 
         ServerBootstrap b = new ServerBootstrap();
-        b.group(bossGroup, workerGroup)
-         .channel(NioServerSocketChannel.class)
+        b.group(bossGroup, workerGroup) //前者用来处理accept事件，后者用于处理已经建立的连接的io
+         .channel(NioServerSocketChannel.class)  //用它来建立新accept的连接，用于构造serversocketchannel的工厂类
          .option(ChannelOption.SO_BACKLOG, 100)
          .childOption(ChannelOption.SO_KEEPALIVE, true) //长连接
          .childOption(ChannelOption.TCP_NODELAY, true) // 为了尽可能发送大块数据，避免网络中充斥着许多小数据块。
@@ -63,9 +62,9 @@ public class ServerImpl implements Server {
          .childHandler(new ChannelInitializer<SocketChannel>() {
              @Override
              public void initChannel(SocketChannel ch) throws Exception {
-                 ch.pipeline().addLast(new LengthFieldBasedFrameDecoder(10240, 0, 2, 0, 2));
+//                 ch.pipeline().addLast(new LengthFieldBasedFrameDecoder(10240, 0, 2, 0, 2));
                  ch.pipeline().addLast("timeout", new IdleStateHandler(readerIdleTime, writerIdleTime, allIdleTime, TimeUnit.SECONDS));
-                 ch.pipeline().addLast(serverHandler);
+                 ch.pipeline().addLast("serverHandler", serverHandler);
              }
          });
 

@@ -62,6 +62,8 @@ public class ClientImpl implements Client {
                      public void initChannel(SocketChannel ch) throws Exception {
                          ch.pipeline().addLast("timeout", new IdleStateHandler(readerIdleTime, writerIdleTime, allIdleTime, TimeUnit.SECONDS));
 
+                         //client端 发的是request，因此要编码
+                         //client端 收的是Reponse，因此要解码
                          //   ch.pipeline().addLast(new Encode(Message.class));
                          ch.pipeline().addLast(clientHandler);
                      }

@@ -54,7 +54,9 @@ public class HttpClient {
 //                   .addLast(new LengthFieldBasedFrameDecoder(10240, 0, 2, 0, 2))
                    .addLast(new HttpRequestEncoder())
                    .addLast(new HttpResponseDecoder())
-                   .addLast(clientHandler);
+//                   .addLast("codec", new HttpClientCodec())
+                   .addLast("aggegator", new HttpObjectAggregator(512 * 1024))
+                   .addLast("clientHandler", clientHandler);
              }
          });
         Channel channel = b.connect(uri.getHost(), uri.getPort() < 0 ? 80 : uri.getPort()).sync().channel();

@@ -1,6 +1,6 @@
 package com.spy.apollo.netty.server.config;
 
-import com.spy.apollo.netty.server.biz.Server;
+import com.spy.apollo.netty.server.biz.service.Server;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;

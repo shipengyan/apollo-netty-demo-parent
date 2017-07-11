@@ -1,15 +1,19 @@
-package com.spy.apollo.netty.server.biz.impl;
+package com.spy.apollo.netty.server.biz.service.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.spy.apollo.netty.server.biz.ServerHandler;
+import com.alibaba.fastjson.JSONObject;
+import com.spy.apollo.netty.server.biz.service.ServerHandler;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelPromise;
 import io.netty.handler.timeout.IdleStateEvent;
 import io.netty.util.CharsetUtil;
 import io.netty.util.ReferenceCountUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+
+import static io.netty.buffer.Unpooled.buffer;
 
 /**
  * 模块名
@@ -24,15 +28,42 @@ public class ServerHandlerImpl implements ServerHandler {
 
     private ChannelHandlerContext ctx;
 
+    private ChannelPromise promise;
+
+    private JSONObject data;
+
     @Override
     public void sendMsg(Object obj) {
         if (ctx != null && ctx.channel() != null && ctx.channel().isActive()) {
             log.debug("server send msg");
-            ctx.writeAndFlush(Unpooled.buffer().writeBytes(JSON.toJSONString(obj).getBytes()));
-        } else {
-            log.warn("ctx is error, plz check", ctx);
+
+            ByteBuf byteBuf = Unpooled.buffer().writeBytes(JSON.toJSONString(obj).getBytes());
+            ctx.writeAndFlush(buffer().writeBytes(byteBuf));
         }
     }
+
+    @Override
+    public JSONObject sendMsgSync(Object obj) {
+        if (ctx != null && ctx.channel() != null && ctx.channel().isActive()) {
+            log.debug("server send msg");
+
+            ByteBuf byteBuf = Unpooled.buffer().writeBytes(JSON.toJSONString(obj).getBytes());
+            promise = ctx.writeAndFlush(byteBuf).channel().newPromise();
+
+            //发送消息不需要release msg
+            try {
+                promise.await();
+
+                return this.data;
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        return null;
+    }
+
 
     @Override
     public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
@@ -60,12 +91,22 @@ public class ServerHandlerImpl implements ServerHandler {
         log.info("channel read");
 
         ByteBuf in = (ByteBuf) msg;
-        log.debug("Server received: {}", in.toString(CharsetUtil.UTF_8));
 
-        //to something
+        String readStr = in.toString(CharsetUtil.UTF_8);
+        log.debug("Server received: {}", readStr);
 
         // relase bytebuf
         ReferenceCountUtil.release(in);
+
+        //convert to json
+        data = JSON.parseObject(readStr);
+
+        if (promise != null) {
+            promise.setSuccess();
+            promise = null;
+        }
+
+
     }
 
     @Override
