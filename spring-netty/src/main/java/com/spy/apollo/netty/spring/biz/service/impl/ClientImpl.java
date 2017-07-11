@@ -50,7 +50,7 @@ public class ClientImpl implements Client {
 
     @Override
     public void start() {
-        group = new NioEventLoopGroup();
+        group = new NioEventLoopGroup(1);
 
         bootstrap = new Bootstrap();
         bootstrap.group(group)
