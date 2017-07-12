@@ -30,14 +30,27 @@ public class CustomApplicationListener implements ApplicationListener<Applicatio
         log.info("=         Application Ready           =");
         log.info("=======================================");
 
-        try {
-            server.start();
+
+        new Thread() {
+            @Override
+            public void run() {
+
+                try {
+                    server.start();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }.start();
 
             log.info("---------------------------------");
-            
-            client.start();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+
+        new Thread() {
+            @Override
+            public void run() {
+                client.start();
+            }
+        }.start();
+
     }
 }

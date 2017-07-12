@@ -48,7 +48,7 @@ public class ServerImpl implements Server {
             log.warn("netty server has started.");
         }
 
-        bossGroup = new NioEventLoopGroup(1);//more than 1 is not needed!
+        bossGroup = new NioEventLoopGroup(1); //more than 1 is not needed!
         workerGroup = new NioEventLoopGroup(Runtime.getRuntime().availableProcessors() - 1);
 
         ServerBootstrap b = new ServerBootstrap();

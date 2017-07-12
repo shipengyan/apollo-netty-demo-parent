@@ -6,6 +6,7 @@ import com.spy.apollo.netty.spring.biz.service.ClientHandler;
 import com.spy.apollo.netty.spring.biz.service.ServerHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
@@ -26,7 +27,7 @@ public class SchedulerConfig {
     @Autowired
     private ClientHandler clientHandler;
 
-    //@Scheduled(cron = "0/50 * * * * ?")
+    @Scheduled(cron = "0/50 * * * * ?")
     public void sendMsgJob() {
         JSONObject jsonObject = new JSONObject();
 
@@ -48,7 +49,7 @@ public class SchedulerConfig {
         serverHandler.sendMsgSync(jsonObject);
     }
 
-    //@Scheduled(cron = "0/50 * * * * ?")
+    @Scheduled(cron = "0/50 * * * * ?")
     public void sendMsg() {
         Message msg = new Message();
         msg.setKey(UUID.randomUUID().toString());
