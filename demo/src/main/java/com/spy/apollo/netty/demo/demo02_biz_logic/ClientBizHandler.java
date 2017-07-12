@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * 模块名
- *
+ * 慎重使用 ChannelInboundHandlerAdapter，建议使用ChannelInBoundHandler
  * @author shi.pengyan
  * @version 1.0 2017-07-11 21:58
  * @since 1.0
