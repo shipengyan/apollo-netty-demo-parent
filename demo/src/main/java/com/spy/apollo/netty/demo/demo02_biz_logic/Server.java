@@ -63,6 +63,7 @@ public class Server {
                        .addLast("encoder", new LengthFieldPrepender(4, false))
                        .addLast("decoder", new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, 4, 0, 4))
 
+                       // 耗时业务逻辑，建议放到非IO线程中
                        .addLast(new DefaultEventExecutorGroup(5), "serverBizHandler", new ServerBizHandler());
                  }
              });
