@@ -1,5 +1,5 @@
 /**
- * 模块名
+ * 模块化示例
  *
  * @author shi.pengyan
  * @version 1.0 2017-07-11 13:24
