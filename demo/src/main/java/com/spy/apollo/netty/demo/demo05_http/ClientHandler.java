@@ -62,7 +62,7 @@ public class ClientHandler implements ChannelInboundHandler {
 
                 sendMsg(request);
             }
-        }, 10, 10, TimeUnit.SECONDS);
+        }, 1, 10, TimeUnit.SECONDS);
     }
 
     @Override

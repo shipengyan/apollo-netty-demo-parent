@@ -11,7 +11,7 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpRequestDecoder;
-import io.netty.handler.codec.http.HttpRequestEncoder;
+import io.netty.handler.codec.http.HttpResponseEncoder;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import io.netty.handler.timeout.IdleStateHandler;
@@ -60,8 +60,9 @@ public class Server {
 
                        .addLast("timeout", new IdleStateHandler(readerIdleTime, writerIdleTime, allIdleTime, TimeUnit.SECONDS))
 
+                       // server 端接收request,发送response
                        .addLast("encoder", new HttpRequestDecoder())
-                       .addLast("decoder", new HttpRequestEncoder())
+                       .addLast("decoder", new HttpResponseEncoder())
                        .addLast("aggegator", new HttpObjectAggregator(512 * 1024))
 
                        .addLast("serverHandler", new ServerHandler());
