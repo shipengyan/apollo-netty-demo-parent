@@ -9,6 +9,7 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpRequestDecoder;
 import io.netty.handler.codec.http.HttpRequestEncoder;
 import lombok.Setter;
@@ -70,6 +71,7 @@ public class Client {
 
                                .addLast("encoder", new HttpRequestDecoder())
                                .addLast("decoder", new HttpRequestEncoder())
+                               .addLast("aggegator", new HttpObjectAggregator(512 * 1024))
 
                                .addLast("clientHandler", clientHandler);
                          }
