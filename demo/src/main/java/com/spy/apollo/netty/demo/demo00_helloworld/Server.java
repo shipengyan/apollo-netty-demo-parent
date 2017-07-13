@@ -56,6 +56,7 @@ public class Server {
                  @Override
                  public void initChannel(SocketChannel ch) throws Exception {
                      ch.pipeline()
+                       .addLast(new LoggingHandler(LogLevel.INFO))
 
                        .addLast("timeout", new IdleStateHandler(readerIdleTime, writerIdleTime, allIdleTime, TimeUnit.SECONDS))
 
