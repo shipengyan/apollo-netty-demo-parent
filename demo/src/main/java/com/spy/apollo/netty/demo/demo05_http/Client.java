@@ -9,9 +9,8 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.http.HttpClientCodec;
 import io.netty.handler.codec.http.HttpObjectAggregator;
-import io.netty.handler.codec.http.HttpRequestEncoder;
-import io.netty.handler.codec.http.HttpResponseDecoder;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -70,8 +69,10 @@ public class Client {
                              ch.pipeline()
 
                                // client端发送request, 接收reponse
-                               .addLast("encoder", new HttpRequestEncoder())
-                               .addLast("decoder", new HttpResponseDecoder())
+                               //.addLast("encoder", new HttpRequestEncoder())
+                               //.addLast("decoder", new HttpResponseDecoder())
+                               .addLast("clientCodec", new HttpClientCodec()) // 整合了上面两个
+
                                .addLast("aggegator", new HttpObjectAggregator(512 * 1024))
 
                                .addLast("clientHandler", clientHandler);
