@@ -1,4 +1,4 @@
-package com.spy.apollo.netty.demo.demo05_http;
+package com.spy.apollo.netty.demo.demo05_http_fileserver;
 
 import com.spy.apollo.netty.demo.common.Const;
 import io.netty.bootstrap.ServerBootstrap;
