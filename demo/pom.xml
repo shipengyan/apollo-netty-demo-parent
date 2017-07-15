@@ -33,12 +33,20 @@
             <artifactId>netty-all</artifactId>
         </dependency>
 
+        <!--linux-->
+        <!--<dependency>-->
+        <!--<groupId>io.netty</groupId>-->
+        <!--<artifactId>netty-transport-native-epoll</artifactId>-->
+        <!--<version>${netty.version}</version>-->
+        <!--&lt;!&ndash;<classifier>${os.detected.classifier}</classifer>&ndash;&gt;-->
+        <!--</dependency>-->
+
         <dependency>
             <groupId>org.littleshoot</groupId>
             <artifactId>littleproxy</artifactId>
             <version>1.1.2</version>
         </dependency>
-        
+
     </dependencies>
 
 </project>
