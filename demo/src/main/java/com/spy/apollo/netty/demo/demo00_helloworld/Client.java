@@ -35,21 +35,14 @@ public class Client {
     private EventLoopGroup group;
     private Bootstrap      bootstrap;
 
-    @Setter
-    private ClientHandler clientHandler;
 
     public static void main(String[] args) throws InterruptedException {
         Client client = new Client();
 
         client.setHost(Const.HOST);
         client.setPort(Const.PORT);
-        ClientHandler handler = new ClientHandler();
-
-        client.setClientHandler(handler);
-
 
         client.start();
-
     }
 
     public void start() throws InterruptedException {
@@ -62,19 +55,19 @@ public class Client {
                      .remoteAddress(new InetSocketAddress(host, port))
                      .option(ChannelOption.SO_KEEPALIVE, true)
                      .option(ChannelOption.TCP_NODELAY, true)
+                     .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 3000)
                      .handler(new LoggingHandler(LogLevel.INFO))
                      .handler(new ChannelInitializer<SocketChannel>() {
                          @Override
                          public void initChannel(SocketChannel ch) throws Exception {
                              //ch.pipeline().addLast("timeout", new IdleStateHandler(readerIdleTime, writerIdleTime, allIdleTime, TimeUnit.SECONDS));
-
-
+                             
                              ch.pipeline()
 
                                .addLast("encoder", new LengthFieldPrepender(4, false))
                                .addLast("decoder", new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, 4, 0, 4))
 
-                               .addLast("clientHandler", clientHandler);
+                               .addLast("clientHandler", new ClientHandler());
                          }
                      });
 
