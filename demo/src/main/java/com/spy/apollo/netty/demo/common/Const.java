@@ -1,5 +1,7 @@
 package com.spy.apollo.netty.demo.common;
 
+import io.netty.util.AttributeKey;
+
 /**
  * 模块名
  *
@@ -11,5 +13,8 @@ public interface Const {
 
     String  HOST = "localhost";
     Integer PORT = 8899;
+
+    AttributeKey<String> STATE = AttributeKey.valueOf("myHandler.state");
+
 
 }
