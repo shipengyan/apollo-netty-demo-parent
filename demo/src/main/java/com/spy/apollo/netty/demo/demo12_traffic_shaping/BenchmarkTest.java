@@ -16,6 +16,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 性能测试
@@ -66,9 +67,14 @@ public class BenchmarkTest {
 
     @Test
     public void run() throws IOException {
-        int MAX_CONNECTION = 100; // 1w 有些大
+        int MAX_CONNECTION = 1000; // 1w 有些大
         for (int i = 0; i < MAX_CONNECTION; i++) {
             bootstrap.connect(Const.HOST, Const.PORT);
+            try {
+                TimeUnit.MILLISECONDS.sleep(300L);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
 
         System.in.read();
