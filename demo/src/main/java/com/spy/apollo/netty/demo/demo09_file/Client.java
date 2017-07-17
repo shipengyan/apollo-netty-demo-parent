@@ -33,21 +33,14 @@ public class Client {
     private EventLoopGroup group;
     private Bootstrap      bootstrap;
 
-    @Setter
-    private ClientHandler clientHandler;
 
     public static void main(String[] args) throws InterruptedException {
         Client client = new Client();
 
         client.setHost(Const.HOST);
         client.setPort(Const.PORT);
-        ClientHandler handler = new ClientHandler();
-
-        client.setClientHandler(handler);
-
 
         client.start();
-
     }
 
     public void start() throws InterruptedException {
@@ -79,7 +72,7 @@ public class Client {
 //                               .addLast("encoder", new ObjectEncoder())
 //                               .addLast("decoder", new ObjectDecoder(ClassResolvers.cacheDisabled(null)))
 
-                               .addLast("clientHandler", clientHandler);
+                               .addLast("clientHandler", new ClientHandler());
                          }
                      });
 
